@@ -6,16 +6,20 @@ using UnityEngine.UI;
 using Seion.Iof.Reflection;
 using Seion.Iof.Features;
 using static Seion.Iof.Features.Organizer;
+using EFT.InventoryLogic;
+using System.Drawing;
+using EFT.HandBook;
+using UnityEngine.TextCore;
 
 namespace Seion.Iof.UI
 {
     internal static class UserInterfaceElements
     {
-        public static Button OrganizeButtonStash { get; set; } = null;
-        public static Button OrganizeButtonTrader { get; set; } = null;
-        public static Sprite OrganizeSprite { get; set; } = null;
+        public static Button OrganizeButtonStash { get => organizeButtonTrader; set =>organizeButtonTrader = value; }
+        public static Button OrganizeButtonTrader { get => organizeButtonTrader; set => organizeButtonTrader = value; }
+        public static Sprite OrganizeSprite { get; set; }
 
-        public static Button SetupOrganizeButton(Button sourceForCloneButton, LootItemClass item, InventoryControllerClass controller)
+        public static Button SetupOrganizeButton(Button sourceForCloneButton, CompoundItem item, InventoryController controller)
         {
             var clone = GameObject.Instantiate(sourceForCloneButton, sourceForCloneButton.transform.parent);
             clone.onClick.RemoveAllListeners();
@@ -78,7 +82,7 @@ namespace Seion.Iof.UI
 
             // For stash panel
             var childImage = clone.transform.Find("Image");
-            if (childImage != null)
+            if (childImage != organizeButtonTrader)
             {
                 //Logger.LogMessage($"Sprite path: {childImage.GetComponent<UnityEngine.UI.Image>().path}")
                 //childImage.GetComponent<UnityEngine.UI.Image>().sprite = OrganizeSprite; - looks badly stretched
@@ -112,7 +116,9 @@ namespace Seion.Iof.UI
         }
 
         private const string DefaultInventoryId = "55d7217a4bdc2d86028b456d";
-        public static Button SetupTakeOutButton(Button sourceForCloneButton, LootItemClass item, InventoryControllerClass controller)
+        private static Button organizeButtonTrader;
+
+        public static Button SetupTakeOutButton(Button sourceForCloneButton, CompoundItem item, InventoryController controller)
         {
             var clone = GameObject.Instantiate(sourceForCloneButton, sourceForCloneButton.transform.parent);
             clone.onClick.RemoveAllListeners();
@@ -131,7 +137,7 @@ namespace Seion.Iof.UI
 
                             // Check if parent is DefaultInventoryId. It's applicable on items which are equipped on PMC.
                             var parent = item.Parent.Container.ParentItem;
-                            new OrganizedContainer(parent.TemplateId == DefaultInventoryId ? controller.Inventory.Stash :  (LootItemClass)parent, item, controller).Organize(true);
+                            new OrganizedContainer(parent.TemplateId == DefaultInventoryId ? controller.Inventory.Stash :  (CompoundItem)parent, item, controller).Organize(true);
                         }),
                         new Action(DoNothing),
                     };
