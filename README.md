@@ -7,4 +7,4 @@ I added recursive sort functionality to organize containers inside other contain
 
 - Original mod made by Nightingale
 - Updated to 3.8.3 by seionmoya
-- Updated for 3.10, mod loads without errors, cant get UI button to show
+- Updated for 3.10, mod loads without errors, cant get UI button to show- please feel free to try and fix
